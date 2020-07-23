@@ -1,6 +1,8 @@
 import * as React from 'react'
 import { Button } from './Button'
 
+const ngrokUrl: string = 'https://196d44862389.ngrok.io'
+
 interface HelloProps {
     compiler: string
     framework: string
@@ -10,6 +12,25 @@ interface HelloProps {
 interface HelloState {
     showButton: boolean
     info: string
+}
+
+interface HubMessage {
+    timestamp: number
+    messageType: string
+}
+interface AccelData extends HubMessage {
+    x: number
+    y: number
+    z: number
+    lat: number
+    lon: number
+    deviceGroup: string
+    deviceLabel: string
+}
+
+interface ButtonData extends HubMessage {
+    lat: number
+    lon: number
 }
 
 export class Hello extends React.Component<HelloProps, HelloState> {
@@ -24,27 +45,16 @@ export class Hello extends React.Component<HelloProps, HelloState> {
     }
 
     public render() {
-        const elements: React.ReactElement<any>[] = []
-        if (this.state.showButton) {
-            elements.push(
-                <div>
-                    <Button hideButton={this.hideButton} />
-                </div>
-            )
-        } else {
-            elements.push(
-                <div>
-                    <h1>
-                        This is a {this.props.framework} application using{' '}
-                        {this.props.compiler} with {this.props.bundler}
-                    </h1>
-                    <p>{this.state.info}</p>
-                    <a onClick={this.showButton}>Click me!</a>
-                </div>
-            )
-        }
-
-        return elements
+        return (
+            <div>
+                <h1>
+                    This is a {this.props.framework} application using{' '}
+                    {this.props.compiler} with {this.props.bundler}
+                </h1>
+                <p>{this.state.info}</p>
+                <button onClick={this.logButtonPress}>Speed Bump hit</button>
+            </div>
+        )
     }
 
     public componentDidMount() {
@@ -87,7 +97,7 @@ export class Hello extends React.Component<HelloProps, HelloState> {
         }
     }
 
-    private accelerationHandler = () => {
+    private accelerationHandler = async () => {
         const accelerometer = this.acc
         let info
         const xyz = '[X, Y, Z]'
@@ -95,13 +105,46 @@ export class Hello extends React.Component<HelloProps, HelloState> {
         info = info.replace('Y', accelerometer.y && accelerometer.y.toFixed(3))
         info = info.replace('Z', accelerometer.z && accelerometer.z.toFixed(3))
         this.setState({ info })
+
+        const hubData: AccelData = {
+            x: accelerometer.x,
+            y: accelerometer.y,
+            z: accelerometer.z,
+            lat: 0,
+            lon: 0,
+            deviceGroup: '0',
+            deviceLabel: '0',
+            timestamp: Date.now(),
+            messageType: 'accelerometer',
+        }
+
+        const headers = new Headers()
+        headers.append('Content-Type', 'application/json')
+
+        const response = await fetch(ngrokUrl + '/giveMeData', {
+            method: 'POST',
+            headers,
+            body: JSON.stringify(hubData),
+        })
+        console.log('sent data res:', response.ok)
     }
 
-    private showButton = () => {
-        this.setState({ showButton: true })
-    }
+    private logButtonPress = async () => {
+        const buttonData: ButtonData = {
+            lat: 0,
+            lon: 0,
+            timestamp: Date.now(),
+            messageType: 'buttonPress',
+        }
 
-    private hideButton = () => {
-        this.setState({ showButton: false })
+        const headers = new Headers()
+        headers.append('Content-Type', 'application/json')
+
+        const response = await fetch(ngrokUrl + '/giveMeData', {
+            method: 'POST',
+            headers,
+            body: JSON.stringify(buttonData),
+        })
+        console.log('sent data res:', response.ok)
     }
 }
