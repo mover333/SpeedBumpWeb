@@ -6,16 +6,16 @@ const config: webpack.Configuration = {
     mode: 'development',
     entry: {
         app: ['./src/App.tsx', 'webpack-hot-middleware/client'],
-        vendor: ['react', 'react-dom']
+        vendor: ['react', 'react-dom'],
     },
     output: {
         path: path.resolve(__dirname, './frontEnd'),
         filename: 'js/[name].bundle.js',
-        devtoolModuleFilenameTemplate: 'file:///[absolute-resource-path]' // for vscode debugger
+        devtoolModuleFilenameTemplate: 'file:///[absolute-resource-path]', // for vscode debugger
     },
     devtool: 'source-map',
     resolve: {
-        extensions: ['.js', '.jsx', '.json', '.ts', '.tsx']
+        extensions: ['.js', '.jsx', '.json', '.ts', '.tsx'],
     },
     module: {
         rules: [
@@ -24,22 +24,38 @@ const config: webpack.Configuration = {
                 exclude: /node_modules/,
                 loader: 'awesome-typescript-loader',
                 query: {
-                    configFileName: './src/tsconfig.frontend.json'
-                }
+                    configFileName: './src/tsconfig.frontend.json',
+                },
             },
             {
                 enforce: 'pre',
                 test: /\.js$/,
                 exclude: /node_modules/,
-                loader: 'source-map-loader'
-            }
-        ]
+                loader: 'source-map-loader',
+            },
+            {
+                test: /\.css$/i,
+                use: ['style-loader', 'css-loader'],
+            },
+            {
+                test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            name: '[name].[ext]',
+                            outputPath: 'fonts/',
+                        },
+                    },
+                ],
+            },
+        ],
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: path.resolve(__dirname, '../src', 'index.html')
+            template: path.resolve(__dirname, '../src', 'index.html'),
         }),
-        new webpack.HotModuleReplacementPlugin()
+        new webpack.HotModuleReplacementPlugin(),
     ],
 
     // When importing a module whose path matches one of the following, just
@@ -48,8 +64,8 @@ const config: webpack.Configuration = {
     // dependencies, which allows browsers to cache those libraries between builds.
     externals: {
         react: 'React',
-        'react-dom': 'ReactDOM'
-    }
+        'react-dom': 'ReactDOM',
+    },
 }
 
 export default config
