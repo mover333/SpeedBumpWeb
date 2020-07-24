@@ -21,12 +21,14 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "@material-ui/core": "^4.11.0",
         "azure-iot-common": "^1.12.4",
         "azure-iot-device": "^1.17.0",
         "azure-iot-device-mqtt": "^1.15.0",
         "dotenv": "^8.2.0",
         "express": "^4.17.1",
         "typescript": "^3.9.7",
+        "uuid": "^8.2.0",
         "webpack": "^4.43.0"
     },
     "devDependencies": {
@@ -36,6 +38,7 @@
         "@types/node": "^14.0.23",
         "@types/react": "^16.9.43",
         "@types/react-dom": "^16.9.8",
+        "@types/uuid": "^8.0.0",
         "@types/w3c-generic-sensor": "^1.0.2",
         "@types/webpack": "^4.41.21",
         "@types/webpack-dev-middleware": "^3.7.1",
