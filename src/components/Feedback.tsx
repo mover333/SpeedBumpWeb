@@ -3,6 +3,7 @@ import * as React from 'react'
 import { SensorsData, AccelerometerData, LocationData } from '../models/Sensors'
 import { SensorDisplay } from './SensorDisplay'
 import { BumpButton } from './BumpButton'
+import { Grid } from '@material-ui/core'
 
 interface FeedbackProps {
     sensorsData: SensorsData
@@ -16,7 +17,11 @@ export const Feedback: React.FunctionComponent<FeedbackProps> = (props) => {
                 accData={getAccData(props.sensorsData)}
                 locationData={getLocData(props.sensorsData)}
             />
-            <BumpButton buttonPressed={props.buttonPressed} />
+            <div style={{ margin: '20px' }}>
+                <Grid container={true} direction="row" justify="center">
+                    <BumpButton buttonPressed={props.buttonPressed} />
+                </Grid>
+            </div>
         </div>
     )
 }
