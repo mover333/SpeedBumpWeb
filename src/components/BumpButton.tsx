@@ -6,8 +6,8 @@ import {
     createMuiTheme,
     Theme,
     createStyles,
+    ThemeProvider,
 } from '@material-ui/core'
-import { blue } from '@material-ui/core/colors'
 
 interface BumpButtonProps {
     buttonPressed: () => void
@@ -17,14 +17,16 @@ export const BumpButton: React.FunctionComponent<BumpButtonProps> = (props) => {
     const classes = useStyles()
     return (
         <a onClick={props.buttonPressed}>
-            <Button
-                variant="contained"
-                size="large"
-                className={classes.main}
-                color="primary"
-            >
-                Speed Bump
-            </Button>
+            <ThemeProvider theme={theme}>
+                <Button
+                    variant="contained"
+                    size="large"
+                    className={classes.main}
+                    color="primary"
+                >
+                    Speed Bump
+                </Button>
+            </ThemeProvider>
         </a>
     )
 }
@@ -39,6 +41,6 @@ const useStyles = makeStyles((themee: Theme) =>
 
 const theme = createMuiTheme({
     palette: {
-        primary: blue,
+        primary: { main: '#2196f3' },
     },
 })
