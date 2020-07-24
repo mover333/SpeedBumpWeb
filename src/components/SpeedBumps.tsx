@@ -34,6 +34,8 @@ export class SpeedBumps extends React.Component<{}, SpeedBumpsState> {
                 <Feedback
                     sensorsData={this.state.sensors}
                     buttonPressed={this.buttonPressed}
+                    setPause={this.setPause}
+                    paused={this.state.paused}
                 />
             </div>
         )
@@ -147,5 +149,9 @@ export class SpeedBumps extends React.Component<{}, SpeedBumpsState> {
             body: JSON.stringify(buttonData),
         })
         console.log('sent data res:', response.ok)
+    }
+
+    private setPause = (paused: boolean) => {
+        this.setState({ paused })
     }
 }

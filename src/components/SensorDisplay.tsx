@@ -12,10 +12,13 @@ import {
     makeStyles,
     Grid,
 } from '@material-ui/core'
+import { AccelerometerDisplay } from './AccelerometerDisplay'
+import { LocationDisplay } from './LocationDisplay'
 
 interface SensorDisplayProps {
     accData: AccelerometerData
     locationData: LocationData
+    paused: boolean
 }
 
 const useStyles = makeStyles({
@@ -30,35 +33,19 @@ export const SensorDisplay: React.FunctionComponent<SensorDisplayProps> = (
 ) => {
     const classes = useStyles()
 
-    return (
-        <div>
-            <Grid container={true} direction="row" justify="center">
-                <h2 style={{ fontFamily: 'Roboto' }}>Accelerometer Data</h2>
-            </Grid>
-            <TableContainer component={Paper}>
-                <Table className={classes.table} aria-label="simple table">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell align="center">X</TableCell>
-                            <TableCell align="center">Y</TableCell>
-                            <TableCell align="center">Z</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        <TableRow key={1}>
-                            <TableCell align="center" className={classes.cell}>
-                                {props.accData.x.toFixed(3)}
-                            </TableCell>
-                            <TableCell align="center" className={classes.cell}>
-                                {props.accData.y.toFixed(3)}
-                            </TableCell>
-                            <TableCell align="center" className={classes.cell}>
-                                {props.accData.z.toFixed(3)}
-                            </TableCell>
-                        </TableRow>
-                    </TableBody>
-                </Table>
-            </TableContainer>
-        </div>
+    let show = (
+        <Grid container={true} direction="row" justify="center">
+            <h2 style={{ fontFamily: 'Roboto' }}>Paused</h2>
+        </Grid>
     )
+    if (!props.paused) {
+        show = (
+            <div>
+                <AccelerometerDisplay accData={props.accData} />
+                <LocationDisplay locData={props.locationData} />
+            </div>
+        )
+    }
+
+    return show
 }

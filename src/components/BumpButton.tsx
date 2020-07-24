@@ -3,7 +3,6 @@ import * as React from 'react'
 import {
     Button,
     makeStyles,
-    createMuiTheme,
     Theme,
     createStyles,
     ThemeProvider,
@@ -11,36 +10,34 @@ import {
 
 interface BumpButtonProps {
     buttonPressed: () => void
+    paused: boolean
 }
 
 export const BumpButton: React.FunctionComponent<BumpButtonProps> = (props) => {
     const classes = useStyles()
-    return (
+    let show = (
         <a onClick={props.buttonPressed}>
-            <ThemeProvider theme={theme}>
-                <Button
-                    variant="contained"
-                    size="large"
-                    className={classes.main}
-                    color="primary"
-                >
-                    Speed Bump
-                </Button>
-            </ThemeProvider>
+            <Button
+                variant="contained"
+                size="large"
+                className={classes.main}
+                color="primary"
+            >
+                Speed Bump
+            </Button>
         </a>
     )
+
+    if (props.paused) {
+        show = <div />
+    }
+    return show
 }
 
-const useStyles = makeStyles((themee: Theme) =>
+const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         main: {
-            padding: themee.spacing(6),
+            padding: theme.spacing(6),
         },
     })
 )
-
-const theme = createMuiTheme({
-    palette: {
-        primary: { main: '#2196f3' },
-    },
-})
