@@ -23,37 +23,56 @@ export class AccelerometerReader extends React.Component<
 
     public componentDidMount() {
         try {
-            navigator.permissions
-                .query({ name: 'accelerometer' })
-                .then((result) => {
-                    if (result.state === 'denied') {
-                        console.log(
-                            'Permission to use accelerometer sensor is denied.'
-                        )
-                        return
-                    }
-                    // Use the sensor.
-                    if (typeof Accelerometer !== 'function') {
-                        console.log('Accelerometer is not found')
-                        return
-                    }
-
-                    this.acc.addEventListener('error', (event: any) => {
-                        // Handle runtime errors.
-                        if (event.error.name === 'NotAllowedError') {
+            if (isIOS13) {
+                if (typeof DeviceMotionEvent.requestPermission === 'function') {
+                    DeviceMotionEvent.requestPermission()
+                        .then((permissionState) => {
+                            if (permissionState === 'granted') {
+                                window.addEventListener(
+                                    'devicemotion',
+                                    () => {}
+                                )
+                            }
+                        })
+                        .catch(console.error)
+                } else {
+                    console.log('Request permission not available')
+                }
+            } else {
+                navigator.permissions
+                    .query({ name: 'accelerometer' })
+                    .then((result) => {
+                        if (result.state === 'denied') {
                             console.log(
-                                'Permission to access sensor was denied.'
+                                'Permission to use accelerometer sensor is denied.'
                             )
-                        } else if (event.error.name === 'NotReadableError') {
-                            console.log('Cannot connect to the sensor.')
+                            return
                         }
+                        // Use the sensor.
+                        if (typeof Accelerometer !== 'function') {
+                            console.log('Accelerometer is not found')
+                            return
+                        }
+
+                        this.acc.addEventListener('error', (event: any) => {
+                            // Handle runtime errors.
+                            if (event.error.name === 'NotAllowedError') {
+                                console.log(
+                                    'Permission to access sensor was denied.'
+                                )
+                            } else if (
+                                event.error.name === 'NotReadableError'
+                            ) {
+                                console.log('Cannot connect to the sensor.')
+                            }
+                        })
+                        this.acc.addEventListener('reading', (e) => {
+                            this.accelerationHandler()
+                        })
+                        this.acc.start()
+                        console.log('Accelerometer started')
                     })
-                    this.acc.addEventListener('reading', (e) => {
-                        this.accelerationHandler()
-                    })
-                    this.acc.start()
-                    console.log('Accelerometer started')
-                })
+            }
         } catch (err) {
             console.log('Error:', err.message)
         }
