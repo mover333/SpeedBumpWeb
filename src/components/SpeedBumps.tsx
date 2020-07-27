@@ -21,8 +21,8 @@ export class SpeedBumps extends React.Component<{}, SpeedBumpsState> {
         this.state = {
             sensors: null,
             paused: false,
-            deviceGroup: '0',
-            deviceLabel: '0',
+            deviceGroup: '',
+            deviceLabel: '',
             validLabels: [''],
         }
     }
