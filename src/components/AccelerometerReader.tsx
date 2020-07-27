@@ -13,7 +13,7 @@ export class AccelerometerReader extends React.Component<
     private acc: Accelerometer
     constructor(props: AccelerometerReaderProps) {
         super(props)
-        this.acc = new Accelerometer({ frequency: 60 })
+        this.acc = new Accelerometer({ frequency: 30 })
     }
 
     public render() {
