@@ -5,12 +5,14 @@ import { SensorsData, AccelerometerData, LocationData } from '../models/Sensors'
 import { Sensors } from './Sensors'
 import { Feedback } from './Feedback'
 import { AccelHubMessage, ButtonHubMessage } from '../models/HubData'
+import { Setup } from './Setup'
 
 interface SpeedBumpsState {
     sensors: SensorsData
     paused: boolean
     deviceGroup: string
     deviceLabel: string
+    validLabels: string[]
 }
 
 export class SpeedBumps extends React.Component<{}, SpeedBumpsState> {
@@ -21,6 +23,7 @@ export class SpeedBumps extends React.Component<{}, SpeedBumpsState> {
             paused: false,
             deviceGroup: '0',
             deviceLabel: '0',
+            validLabels: [''],
         }
     }
 
@@ -30,6 +33,11 @@ export class SpeedBumps extends React.Component<{}, SpeedBumpsState> {
                 <Sensors
                     updateAcc={this.updateAcc}
                     updateLocation={this.updateLocation}
+                />
+                <Setup
+                    validLabels={this.state.validLabels}
+                    setDeviceGroup={this.setDeviceGroup}
+                    setDeviceLabel={this.setDeviceLabel}
                 />
                 <Feedback
                     sensorsData={this.state.sensors}
@@ -56,6 +64,15 @@ export class SpeedBumps extends React.Component<{}, SpeedBumpsState> {
                 )
             }
         }
+    }
+
+    public async componentDidMount() {
+        const response = await fetch('/deviceLabels', {
+            method: 'GET',
+        })
+
+        const labels = await response.json()
+        this.setState({ validLabels: labels })
     }
 
     private updateAcc = (accData: AccelerometerData) => {
@@ -108,11 +125,11 @@ export class SpeedBumps extends React.Component<{}, SpeedBumpsState> {
     }
 
     private notCloseToZero = (accData: AccelerometerData): boolean => {
-        const threshhold = 0.2
+        const threshhold = 0.25
         return !(
             Math.abs(accData.x) - threshhold < 0 &&
             Math.abs(accData.y) - threshhold < 0 &&
-            Math.abs(accData.z) - threshhold < 0
+            Math.abs(accData.z - 9.7) - threshhold < 0
         )
     }
 
@@ -153,5 +170,13 @@ export class SpeedBumps extends React.Component<{}, SpeedBumpsState> {
 
     private setPause = (paused: boolean) => {
         this.setState({ paused })
+    }
+
+    private setDeviceLabel = (label: string) => {
+        this.setState({ deviceLabel: label })
+    }
+
+    private setDeviceGroup = (group: string) => {
+        this.setState({ deviceGroup: group })
     }
 }
