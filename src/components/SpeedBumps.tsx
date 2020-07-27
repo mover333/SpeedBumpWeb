@@ -21,8 +21,8 @@ export class SpeedBumps extends React.Component<{}, SpeedBumpsState> {
         this.state = {
             sensors: null,
             paused: false,
-            deviceGroup: '0',
-            deviceLabel: '0',
+            deviceGroup: '',
+            deviceLabel: '',
             validLabels: [''],
         }
     }
@@ -152,8 +152,8 @@ export class SpeedBumps extends React.Component<{}, SpeedBumpsState> {
             locationData: this.getLocData(this.state.sensors),
             timestamp: Date.now(),
             messageType: 'buttonPress',
-            deviceGroup: '0',
-            deviceLabel: '0',
+            deviceGroup: this.state.deviceGroup,
+            deviceLabel: this.state.deviceLabel,
             id: guid(),
         }
 
