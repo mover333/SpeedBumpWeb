@@ -2,42 +2,51 @@ import * as React from 'react'
 import { isIOS13 } from 'react-device-detect'
 
 import { AccelerometerData } from '../models/Sensors'
+import { Button } from '@material-ui/core'
 
 interface AccelerometerReaderProps {
     updateAcc: (acc: AccelerometerData) => void
 }
 
+interface AccelerometerReaderState {
+    isIos: boolean
+    iosIsEnabled: boolean
+}
 export class AccelerometerReader extends React.Component<
     AccelerometerReaderProps,
-    {}
+    AccelerometerReaderState
 > {
     private acc: Accelerometer
     constructor(props: AccelerometerReaderProps) {
         super(props)
-        this.acc = new Accelerometer({ frequency: 30 })
+        this.state = {
+            isIos: false,
+            iosIsEnabled: false,
+        }
     }
 
     public render() {
-        return <div />
+        let show = <div />
+        if (this.state.isIos && !this.state.iosIsEnabled) {
+            show = (
+                <Button
+                    variant="contained"
+                    size="small"
+                    color="secondary"
+                    style={{ margin: '5px' }}
+                    onClick={this.handleButton}
+                >
+                    Enable Accelerometer
+                </Button>
+            )
+        }
+        return show
     }
 
-    public componentDidMount() {
+    public async componentDidMount() {
         try {
             if (isIOS13) {
-                if (typeof DeviceMotionEvent.requestPermission === 'function') {
-                    DeviceMotionEvent.requestPermission()
-                        .then((permissionState) => {
-                            if (permissionState === 'granted') {
-                                window.addEventListener(
-                                    'devicemotion',
-                                    () => {}
-                                )
-                            }
-                        })
-                        .catch(console.error)
-                } else {
-                    console.log('Request permission not available')
-                }
+                this.setState({ isIos: true, iosIsEnabled: false })
             } else {
                 navigator.permissions
                     .query({ name: 'accelerometer' })
@@ -53,6 +62,7 @@ export class AccelerometerReader extends React.Component<
                             console.log('Accelerometer is not found')
                             return
                         }
+                        this.acc = new Accelerometer({ frequency: 30 })
 
                         this.acc.addEventListener('error', (event: any) => {
                             // Handle runtime errors.
@@ -86,5 +96,34 @@ export class AccelerometerReader extends React.Component<
         }
 
         this.props.updateAcc(accData)
+    }
+
+    private accelerationHandlerIos = (event: DeviceMotionEvent) => {
+        const accData: AccelerometerData = {
+            x: event.accelerationIncludingGravity.x,
+            y: event.accelerationIncludingGravity.y,
+            z: event.accelerationIncludingGravity.z,
+        }
+
+        this.props.updateAcc(accData)
+    }
+
+    private handleButton = async () => {
+        if (typeof DeviceMotionEvent.requestPermission === 'function') {
+            const permissionState = await DeviceMotionEvent.requestPermission()
+
+            if (permissionState === 'granted') {
+                console.log('granted')
+                window.addEventListener(
+                    'devicemotion',
+                    this.accelerationHandlerIos
+                )
+                this.setState({
+                    iosIsEnabled: true,
+                })
+            }
+        } else {
+            console.log('Request permission not available')
+        }
     }
 }
