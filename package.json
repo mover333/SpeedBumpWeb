@@ -28,6 +28,7 @@
         "dotenv": "^8.2.0",
         "express": "^4.17.1",
         "fontsource-roboto": "^2.2.6",
+        "react-device-detect": "^1.13.1",
         "typescript": "^3.9.7",
         "uuid": "^8.2.0",
         "webpack": "^4.43.0"

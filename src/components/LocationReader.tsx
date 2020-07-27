@@ -34,7 +34,7 @@ export class LocationReader extends React.Component<LocationReaderProps, {}> {
                     )
                 })
         } catch (err) {
-            console.log({ info: err })
+            console.log('Error:', err.message)
         }
     }
 

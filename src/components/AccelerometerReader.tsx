@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { isIOS13 } from 'react-device-detect'
 
 import { AccelerometerData } from '../models/Sensors'
 
@@ -40,13 +41,11 @@ export class AccelerometerReader extends React.Component<
                     this.acc.addEventListener('error', (event: any) => {
                         // Handle runtime errors.
                         if (event.error.name === 'NotAllowedError') {
-                            console.log({
-                                info: 'Permission to access sensor was denied.',
-                            })
+                            console.log(
+                                'Permission to access sensor was denied.'
+                            )
                         } else if (event.error.name === 'NotReadableError') {
-                            console.log({
-                                info: 'Cannot connect to the sensor.',
-                            })
+                            console.log('Cannot connect to the sensor.')
                         }
                     })
                     this.acc.addEventListener('reading', (e) => {
@@ -56,7 +55,7 @@ export class AccelerometerReader extends React.Component<
                     console.log('Accelerometer started')
                 })
         } catch (err) {
-            console.log({ info: err })
+            console.log('Error:', err.message)
         }
     }
 
