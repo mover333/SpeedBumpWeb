@@ -1,11 +1,6 @@
 import * as React from 'react'
 
-import { SensorsData, AccelerometerData, LocationData } from '../models/Sensors'
-import { SensorDisplay } from './SensorDisplay'
-import { BumpButton } from './BumpButton'
-import { Grid, ThemeProvider, createMuiTheme } from '@material-ui/core'
-import { PauseButton } from './PauseButton'
-import { PauseButtonSwitcher } from './PauseButtonSwitcher'
+import { ThemeProvider, createMuiTheme } from '@material-ui/core'
 
 interface SetupProps {
     setDeviceLabel: (deviceLabel: string) => void

@@ -10,10 +10,10 @@ export class AccelerometerReader extends React.Component<
     AccelerometerReaderProps,
     {}
 > {
-    private acc: LinearAccelerationSensor
+    private acc: Accelerometer
     constructor(props: AccelerometerReaderProps) {
         super(props)
-        this.acc = new LinearAccelerationSensor()
+        this.acc = new Accelerometer({ frequency: 60 })
     }
 
     public render() {
@@ -32,7 +32,7 @@ export class AccelerometerReader extends React.Component<
                         return
                     }
                     // Use the sensor.
-                    if (typeof LinearAccelerationSensor !== 'function') {
+                    if (typeof Accelerometer !== 'function') {
                         console.log('Accelerometer is not found')
                         return
                     }
