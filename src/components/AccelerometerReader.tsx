@@ -36,7 +36,7 @@ export class AccelerometerReader extends React.Component<
                     style={{ margin: '5px' }}
                     onClick={this.handleButton}
                 >
-                    Enable Accelerometer
+                    iOS 13+ Enable Accelerometer
                 </Button>
             )
         }
