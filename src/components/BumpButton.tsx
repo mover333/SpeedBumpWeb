@@ -15,7 +15,7 @@ interface BumpButtonProps {
 
 export const BumpButton: React.FunctionComponent<BumpButtonProps> = (props) => {
     const classes = useStyles()
-    let show = (
+    const show = (
         <a onClick={props.buttonPressed}>
             <Button
                 variant="contained"
@@ -28,9 +28,6 @@ export const BumpButton: React.FunctionComponent<BumpButtonProps> = (props) => {
         </a>
     )
 
-    if (props.paused) {
-        show = <div />
-    }
     return show
 }
 
