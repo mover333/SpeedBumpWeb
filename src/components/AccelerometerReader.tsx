@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { isIOS13 } from 'react-device-detect'
+import { isIOS } from 'react-device-detect'
 
 import { AccelerometerData } from '../models/Sensors'
 import { Button } from '@material-ui/core'
@@ -45,7 +45,7 @@ export class AccelerometerReader extends React.Component<
 
     public async componentDidMount() {
         try {
-            if (isIOS13) {
+            if (isIOS) {
                 this.setState({ isIos: true, iosIsEnabled: false })
             } else {
                 navigator.permissions

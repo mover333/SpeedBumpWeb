@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 import { LocationData } from '../models/Sensors'
-import { isIOS13 } from 'react-device-detect'
+import { isIOS } from 'react-device-detect'
 
 interface LocationReaderProps {
     updateLocation: (loc: LocationData) => void
@@ -18,7 +18,7 @@ export class LocationReader extends React.Component<LocationReaderProps, {}> {
 
     public componentDidMount() {
         try {
-            if (isIOS13) {
+            if (isIOS) {
                 navigator.geolocation.watchPosition(
                     this.locationHandler,
                     this.handleError,
