@@ -1,4 +1,5 @@
 import * as React from 'react'
+import ReactNoSleep from 'react-no-sleep'
 
 import { Button, createMuiTheme, ThemeProvider } from '@material-ui/core'
 
@@ -10,14 +11,20 @@ export const PauseButton: React.FunctionComponent<PauseButtonProps> = (
     props
 ) => {
     return (
-        <a
-            onClick={() => {
-                props.setPause(true)
-            }}
-        >
-            <Button variant="contained" size="small" color="secondary">
-                Pause Readings
-            </Button>
-        </a>
+        <ReactNoSleep>
+            {({ isOn, enable, disable }) => (
+                <Button
+                    variant="contained"
+                    size="small"
+                    color="secondary"
+                    onClick={() => {
+                        disable()
+                        props.setPause(true)
+                    }}
+                >
+                    Pause Readings
+                </Button>
+            )}
+        </ReactNoSleep>
     )
 }
