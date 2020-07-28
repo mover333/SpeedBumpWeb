@@ -139,11 +139,11 @@ export class SpeedBumps extends React.Component<{}, SpeedBumpsState> {
             return sensorData.location
         } else {
             return {
-                latitude: 0,
-                longitude: 0,
-                heading: 0,
-                speed: 0,
-                altitude: 0,
+                latitude: null,
+                longitude: null,
+                heading: null,
+                speed: null,
+                altitude: null,
             }
         }
     }

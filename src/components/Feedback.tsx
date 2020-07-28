@@ -55,9 +55,9 @@ const getAccData = (sensorData: SensorsData): AccelerometerData => {
         return sensorData.accelerometer
     } else {
         return {
-            x: 0,
-            y: 0,
-            z: 0,
+            x: null,
+            y: null,
+            z: null,
         }
     }
 }
@@ -67,11 +67,11 @@ const getLocData = (sensorData: SensorsData): LocationData => {
         return sensorData.location
     } else {
         return {
-            latitude: 0,
-            longitude: 0,
-            heading: 0,
-            speed: 0,
-            altitude: 0,
+            latitude: null,
+            longitude: null,
+            heading: null,
+            speed: null,
+            altitude: null,
         }
     }
 }

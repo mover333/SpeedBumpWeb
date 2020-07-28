@@ -59,17 +59,17 @@ export const LocationDisplay: React.FunctionComponent<LocationDisplayProps> = (
                             <TableCell align="center" className={classes.cell}>
                                 {props.locData?.heading
                                     ? props.locData.heading.toFixed(3)
-                                    : 0}
+                                    : null}
                             </TableCell>
                             <TableCell align="center" className={classes.cell}>
                                 {props.locData?.speed
                                     ? props.locData.speed.toFixed(3)
-                                    : 0}
+                                    : null}
                             </TableCell>
                             <TableCell align="center" className={classes.cell}>
                                 {props.locData?.altitude
                                     ? props.locData.altitude.toFixed(3)
-                                    : 0}
+                                    : null}
                             </TableCell>
                         </TableRow>
                     </TableBody>
