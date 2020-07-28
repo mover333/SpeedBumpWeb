@@ -6,6 +6,7 @@ import {
     Theme,
     createStyles,
     ThemeProvider,
+    Grid,
 } from '@material-ui/core'
 
 interface BumpButtonProps {
@@ -15,17 +16,32 @@ interface BumpButtonProps {
 
 export const BumpButton: React.FunctionComponent<BumpButtonProps> = (props) => {
     const classes = useStyles()
+    const [count, setCount] = React.useState(0)
     const show = (
-        <a onClick={props.buttonPressed}>
-            <Button
-                variant="contained"
-                size="large"
-                className={classes.main}
-                color="primary"
+        <Grid
+            container={true}
+            direction="column"
+            justify="center"
+            alignItems="center"
+            alignContent="center"
+        >
+            <a
+                onClick={() => {
+                    setCount(count + 1)
+                    props.buttonPressed()
+                }}
             >
-                Speed Bump
-            </Button>
-        </a>
+                <Button
+                    variant="contained"
+                    size="large"
+                    className={classes.main}
+                    color="primary"
+                >
+                    Speed Bump
+                </Button>
+            </a>
+            <p style={{ fontFamily: 'Roboto' }}>Press Count: {count}</p>
+        </Grid>
     )
 
     return show

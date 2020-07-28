@@ -45,6 +45,7 @@ export class DeviceSelect extends React.Component<
                     value={this.state.deviceLabel}
                     onChange={this.handleChange}
                 >
+                    <MenuItem value={''}>None</MenuItem>
                     {this.props.validLabels.map(
                         (value: string, index: number) => {
                             return (

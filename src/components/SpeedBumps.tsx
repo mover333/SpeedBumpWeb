@@ -13,6 +13,7 @@ interface SpeedBumpsState {
     deviceGroup: string
     deviceLabel: string
     validLabels: string[]
+    transmitting: boolean
 }
 
 export class SpeedBumps extends React.Component<{}, SpeedBumpsState> {
@@ -20,10 +21,11 @@ export class SpeedBumps extends React.Component<{}, SpeedBumpsState> {
         super(null)
         this.state = {
             sensors: null,
-            paused: false,
+            paused: true,
             deviceGroup: '',
             deviceLabel: '',
             validLabels: [''],
+            transmitting: false,
         }
     }
 
@@ -44,6 +46,7 @@ export class SpeedBumps extends React.Component<{}, SpeedBumpsState> {
                     buttonPressed={this.buttonPressed}
                     setPause={this.setPause}
                     paused={this.state.paused}
+                    transmitting={this.state.transmitting}
                 />
             </div>
         )
@@ -55,13 +58,15 @@ export class SpeedBumps extends React.Component<{}, SpeedBumpsState> {
                 this.state.sensors.accelerometer !==
                     prevState.sensors?.accelerometer &&
                 !this.state.paused &&
-                this.notCloseToZero(this.state.sensors.accelerometer)
+                this.notCloseToZero(this.state.sensors.accelerometer) &&
+                this.state.deviceLabel !== ''
             ) {
-                this.sendAccToHub(
-                    this.state.sensors,
-                    this.state.deviceGroup,
-                    this.state.deviceLabel
-                )
+                this.sendAccToHub(this.state.sensors)
+                if (!prevState.transmitting)
+                    this.setState({ transmitting: true })
+            } else {
+                if (prevState.transmitting)
+                    this.setState({ transmitting: false })
             }
         }
     }
@@ -93,11 +98,7 @@ export class SpeedBumps extends React.Component<{}, SpeedBumpsState> {
         }))
     }
 
-    private sendAccToHub = async (
-        data: SensorsData,
-        deviceGroup: string,
-        deviceLabel: string
-    ) => {
+    private sendAccToHub = async (data: SensorsData) => {
         const hubData: AccelHubMessage = {
             accelerometerData: {
                 x: data.accelerometer.x,
@@ -105,8 +106,8 @@ export class SpeedBumps extends React.Component<{}, SpeedBumpsState> {
                 z: data.accelerometer.z,
             },
             locationData: this.getLocData(data),
-            deviceGroup,
-            deviceLabel,
+            deviceGroup: this.state.deviceGroup,
+            deviceLabel: this.state.deviceLabel,
             timestamp: Date.now(),
             messageType: 'accelerometer',
             id: guid(),
