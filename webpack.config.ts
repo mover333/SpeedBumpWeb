@@ -1,6 +1,7 @@
 import * as webpack from 'webpack'
 import * as path from 'path'
 import * as HtmlWebpackPlugin from 'html-webpack-plugin'
+import { GenerateSW } from 'workbox-webpack-plugin'
 
 const config: webpack.Configuration = {
     mode: 'development',
@@ -56,6 +57,10 @@ const config: webpack.Configuration = {
             template: path.resolve(__dirname, '../src', 'index.html'),
         }),
         new webpack.HotModuleReplacementPlugin(),
+        new GenerateSW({
+            clientsClaim: true,
+            skipWaiting: true,
+        }),
     ],
 
     // When importing a module whose path matches one of the following, just

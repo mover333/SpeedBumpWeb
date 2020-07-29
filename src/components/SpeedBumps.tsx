@@ -40,6 +40,7 @@ export class SpeedBumps extends React.Component<{}, SpeedBumpsState> {
                     validLabels={this.state.validLabels}
                     setDeviceGroup={this.setDeviceGroup}
                     setDeviceLabel={this.setDeviceLabel}
+                    location={this.getLocData(this.state.sensors)}
                 />
                 <Feedback
                     sensorsData={this.state.sensors}
