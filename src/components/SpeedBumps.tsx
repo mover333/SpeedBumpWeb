@@ -10,10 +10,15 @@ import { Setup } from './Setup'
 interface SpeedBumpsState {
     sensors: SensorsData
     paused: boolean
-    deviceGroup: string
-    deviceLabel: string
+    setupSelections: {
+        deviceGroup: string
+        deviceLabel: string
+        role: string
+        notificationsEnabled: boolean
+    }
     validLabels: string[]
     transmitting: boolean
+    setup: boolean
 }
 
 export class SpeedBumps extends React.Component<{}, SpeedBumpsState> {
@@ -22,33 +27,33 @@ export class SpeedBumps extends React.Component<{}, SpeedBumpsState> {
         this.state = {
             sensors: null,
             paused: true,
-            deviceGroup: '',
-            deviceLabel: '',
+            setupSelections: {
+                deviceGroup: null,
+                deviceLabel: null,
+                role: null,
+                notificationsEnabled: null,
+            },
             validLabels: [''],
             transmitting: false,
+            setup: true,
         }
     }
 
     public render() {
         return (
             <div>
-                <Sensors
-                    updateAcc={this.updateAcc}
-                    updateLocation={this.updateLocation}
-                />
-                <Setup
-                    validLabels={this.state.validLabels}
-                    setDeviceGroup={this.setDeviceGroup}
-                    setDeviceLabel={this.setDeviceLabel}
-                    location={this.getLocData(this.state.sensors)}
-                />
-                <Feedback
-                    sensorsData={this.state.sensors}
-                    buttonPressed={this.buttonPressed}
-                    setPause={this.setPause}
-                    paused={this.state.paused}
-                    transmitting={this.state.transmitting}
-                />
+                {this.state.setup ? (
+                    <Setup
+                        setDeviceLabel={this.setDeviceLabel}
+                        setDeviceGroup={this.setDeviceGroup}
+                        setNotifications={this.setNotifications}
+                        setRole={this.setRole}
+                        validLabels={this.state.validLabels}
+                        setSetup={this.setSetup}
+                    />
+                ) : (
+                    <div />
+                )}
             </div>
         )
     }
@@ -56,11 +61,11 @@ export class SpeedBumps extends React.Component<{}, SpeedBumpsState> {
     public componentDidUpdate({}, prevState: SpeedBumpsState) {
         if (this.state.sensors?.accelerometer) {
             if (
+                !this.state.setup &&
                 this.state.sensors.accelerometer !==
                     prevState.sensors?.accelerometer &&
                 !this.state.paused &&
-                this.notCloseToZero(this.state.sensors.accelerometer) &&
-                this.state.deviceLabel !== ''
+                this.notCloseToZero(this.state.sensors.accelerometer)
             ) {
                 this.sendAccToHub(this.state.sensors)
                 if (!prevState.transmitting)
@@ -107,8 +112,8 @@ export class SpeedBumps extends React.Component<{}, SpeedBumpsState> {
                 z: data.accelerometer.z,
             },
             locationData: this.getLocData(data),
-            deviceGroup: this.state.deviceGroup,
-            deviceLabel: this.state.deviceLabel,
+            deviceGroup: this.state.setupSelections.deviceGroup,
+            deviceLabel: this.state.setupSelections.deviceLabel,
             timestamp: Date.now(),
             messageType: 'accelerometer',
             id: guid(),
@@ -154,8 +159,8 @@ export class SpeedBumps extends React.Component<{}, SpeedBumpsState> {
             locationData: this.getLocData(this.state.sensors),
             timestamp: Date.now(),
             messageType: 'buttonPress',
-            deviceGroup: this.state.deviceGroup,
-            deviceLabel: this.state.deviceLabel,
+            deviceGroup: this.state.setupSelections.deviceGroup,
+            deviceLabel: this.state.setupSelections.deviceLabel,
             id: guid(),
         }
 
@@ -175,10 +180,42 @@ export class SpeedBumps extends React.Component<{}, SpeedBumpsState> {
     }
 
     private setDeviceLabel = (label: string) => {
-        this.setState({ deviceLabel: label })
+        this.setState({
+            setupSelections: {
+                deviceLabel: label,
+                ...this.state.setupSelections,
+            },
+        })
     }
 
     private setDeviceGroup = (group: string) => {
-        this.setState({ deviceGroup: group })
+        this.setState({
+            setupSelections: {
+                deviceGroup: group,
+                ...this.state.setupSelections,
+            },
+        })
+    }
+
+    private setNotifications = (enabled: boolean) => {
+        this.setState({
+            setupSelections: {
+                notificationsEnabled: enabled,
+                ...this.state.setupSelections,
+            },
+        })
+    }
+
+    private setRole = (role: string) => {
+        this.setState({
+            setupSelections: {
+                role,
+                ...this.state.setupSelections,
+            },
+        })
+    }
+
+    private setSetup = (setup: boolean) => {
+        this.setState({ setup })
     }
 }

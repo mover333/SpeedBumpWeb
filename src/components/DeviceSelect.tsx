@@ -1,14 +1,6 @@
 import * as React from 'react'
 
-import {
-    FormControl,
-    InputLabel,
-    Select,
-    createStyles,
-    makeStyles,
-    MenuItem,
-    Theme,
-} from '@material-ui/core'
+import { Dropdown, IDropdownOption } from '@fluentui/react'
 
 interface DeviceSelectProps {
     setDeviceLabel: (deviceLabel: string) => void
@@ -26,42 +18,33 @@ export class DeviceSelect extends React.Component<
     constructor(props: DeviceSelectProps) {
         super(props)
         this.state = {
-            deviceLabel: props.validLabels[0],
+            deviceLabel: null,
         }
     }
 
     public render() {
+        const options: IDropdownOption[] = this.props.validLabels.map(
+            (value: string) => {
+                return { key: value, text: value }
+            }
+        )
+
         return (
-            <FormControl
-                style={{
-                    margin: '10px',
-                    minWidth: '120px',
-                }}
-            >
-                <InputLabel id="device-label-select">Device Label</InputLabel>
-                <Select
-                    labelId="device-label-select"
-                    id="device-label-select-id"
-                    value={this.state.deviceLabel}
-                    onChange={this.handleChange}
-                >
-                    <MenuItem value={''}>None</MenuItem>
-                    {this.props.validLabels.map(
-                        (value: string, index: number) => {
-                            return (
-                                <MenuItem value={value} key={index}>
-                                    {value}
-                                </MenuItem>
-                            )
-                        }
-                    )}
-                </Select>
-            </FormControl>
+            <Dropdown
+                placeHolder="Select a device"
+                label="Device Label"
+                options={options}
+                onChange={this.handleChange}
+            />
         )
     }
 
-    private handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-        const label = event.target.value as string
+    private handleChange = (
+        event: React.FormEvent<HTMLDivElement>,
+        option?: IDropdownOption,
+        index?: number
+    ) => {
+        const label = option.key as string
         this.setState({ deviceLabel: label })
         this.props.setDeviceLabel(label)
     }

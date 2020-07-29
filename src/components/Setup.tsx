@@ -1,75 +1,50 @@
 import * as React from 'react'
+import { isIOS } from 'react-device-detect'
 
-import { ThemeProvider, createMuiTheme, Grid } from '@material-ui/core'
+import { Grid } from '@material-ui/core'
 import { DeviceSelect } from './DeviceSelect'
 import { DeviceGroupEntry } from './DeviceGroupEntry'
-import { LocationAlerter } from './LocationAlerter'
-import { LocationData } from '../models/Sensors'
-import { isIOS } from 'react-device-detect'
+import { NotificationSelect } from './NotificationsSelect'
+import { RoleSelect } from './RoleSelect'
+import { Button } from '@fluentui/react'
 
 interface SetupProps {
     setDeviceLabel: (deviceLabel: string) => void
-    setDeviceGroup: (deviceLabel: string) => void
+    setDeviceGroup: (deviceGroup: string) => void
+    setNotifications: (enabled: boolean) => void
+    setRole: (role: string) => void
+    setSetup: (setup: boolean) => void
     validLabels: string[]
-    location: LocationData
 }
 
 export const Setup: React.FunctionComponent<SetupProps> = (props) => {
-    let show = (
-        <ThemeProvider theme={theme}>
-            <Grid
-                container={true}
-                direction="column"
-                justify="center"
-                alignItems="center"
-                alignContent="center"
-            >
-                <h2 style={{ fontFamily: 'Roboto' }}>Device Setup</h2>
-                <DeviceSelect
-                    setDeviceLabel={props.setDeviceLabel}
-                    validLabels={props.validLabels}
-                />
-                <div style={{ margin: '5px' }}>
-                    <DeviceGroupEntry setDeviceGroup={props.setDeviceGroup} />
-                </div>
-                <div>
-                    <LocationAlerter location={props.location} />
-                </div>
-            </Grid>
-        </ThemeProvider>
-    )
-    if (isIOS)
-        show = (
-            <ThemeProvider theme={theme}>
-                <Grid
-                    container={true}
-                    direction="column"
-                    justify="center"
-                    alignItems="center"
-                    alignContent="center"
-                >
-                    <h2 style={{ fontFamily: 'Roboto' }}>Device Setup</h2>
-                    <DeviceSelect
-                        setDeviceLabel={props.setDeviceLabel}
-                        validLabels={props.validLabels}
-                    />
-                    <div style={{ margin: '5px' }}>
-                        <DeviceGroupEntry
-                            setDeviceGroup={props.setDeviceGroup}
-                        />
-                    </div>
-                    <div>
-                        <p>Notifications not supported on IOS :(</p>
-                    </div>
-                </Grid>
-            </ThemeProvider>
-        )
-    return show
-}
+    return (
+        <Grid
+            container={true}
+            direction="column"
+            justify="center"
+            alignItems="center"
+            alignContent="center"
+        >
+            <DeviceSelect
+                setDeviceLabel={props.setDeviceLabel}
+                validLabels={props.validLabels}
+            />
+            <DeviceGroupEntry setDeviceGroup={props.setDeviceGroup} />
+            {isIOS ? (
+                <p>Notifications not supported on IOS :(</p>
+            ) : (
+                <NotificationSelect setNotification={props.setNotifications} />
+            )}
 
-const theme = createMuiTheme({
-    palette: {
-        primary: { main: '#2196f3' },
-        secondary: { main: '#ff9800' },
-    },
-})
+            <RoleSelect setRole={props.setRole} />
+            <Button
+                onClick={() => {
+                    props.setSetup(false)
+                }}
+            >
+                Submit
+            </Button>
+        </Grid>
+    )
+}
