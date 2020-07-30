@@ -1,6 +1,13 @@
 import * as React from 'react'
 
-import { FontIcon, mergeStyles, getTheme, Text } from '@fluentui/react'
+import {
+    FontIcon,
+    mergeStyles,
+    getTheme,
+    Text,
+    Spinner,
+    SpinnerSize,
+} from '@fluentui/react'
 import { Grid } from '@material-ui/core'
 
 interface StatusBarProps {
@@ -17,7 +24,7 @@ export const StatusBar: React.FunctionComponent<StatusBarProps> = (props) => {
                 justify="center"
                 alignItems="center"
                 alignContent="center"
-                style={{ minHeight: '80px' }}
+                style={{ minHeight: '100px' }}
             >
                 <Text variant="xxLarge">Paused</Text>
             </Grid>
@@ -30,9 +37,10 @@ export const StatusBar: React.FunctionComponent<StatusBarProps> = (props) => {
                 justify="center"
                 alignItems="center"
                 alignContent="center"
-                style={{ minHeight: '80px' }}
+                style={{ minHeight: '100px' }}
             >
                 <Text variant="xxLarge">Transmitting</Text>
+                <Spinner size={SpinnerSize.large} style={{ padding: '10px' }} />
             </Grid>
         </div>
     ) : (
@@ -43,7 +51,7 @@ export const StatusBar: React.FunctionComponent<StatusBarProps> = (props) => {
                 justify="center"
                 alignItems="center"
                 alignContent="center"
-                style={{ minHeight: '80px' }}
+                style={{ minHeight: '100px' }}
             >
                 <Text variant="xxLarge">Waiting for Movement</Text>
             </Grid>
@@ -57,7 +65,7 @@ const transClass = mergeStyles([
         color: theme.palette.white,
         lineHeight: '50px',
         padding: '0 20px',
-        minHeight: ' 80px',
+        minHeight: ' 100px',
     },
 ])
 
@@ -67,6 +75,6 @@ const pauseClass = mergeStyles([
         color: theme.palette.white,
         lineHeight: '50px',
         padding: '0 20px',
-        minHeight: ' 80px',
+        minHeight: ' 100px',
     },
 ])
