@@ -6,7 +6,7 @@ import { Sensors } from './Sensors'
 import { AccelHubMessage, ButtonHubMessage } from '../models/HubData'
 import { Setup } from './Setup'
 import { DeviceSetupDisplay } from './DeviceSetupDisplay'
-import { Stack, Separator } from '@fluentui/react'
+import { Stack, Separator, Text } from '@fluentui/react'
 import { PauseButtonSwitcher } from './PauseButtonSwitcher'
 import { StatusBar } from './StatusBar'
 import { SensorDisplay } from './SensorDisplay'
@@ -15,6 +15,7 @@ import { LocationDisplay } from './LocationDisplay'
 import { BumpButton } from './BumpButton'
 import { LocationAlerter } from './LocationAlerter'
 import { isIOS } from 'react-device-detect'
+import { Grid } from '@material-ui/core'
 
 interface SpeedBumpsState {
     sensors: SensorsData
@@ -113,7 +114,18 @@ export class SpeedBumps extends React.Component<{}, SpeedBumpsState> {
                     ) : (
                         <div />
                     )}
-                    <Stack tokens={{ childrenGap: 30 }}>
+                    <Stack tokens={{ childrenGap: 5 }}>
+                        <Grid
+                            container={true}
+                            direction="column"
+                            justify="center"
+                            alignItems="center"
+                            alignContent="center"
+                        >
+                            <Text variant="xxLarge">Speed Bump Detection</Text>
+                        </Grid>
+                        <Separator />
+
                         <DeviceSetupDisplay
                             deviceGroup={this.state.setupSelections.deviceGroup}
                             deviceLabel={this.state.setupSelections.deviceLabel}
@@ -146,7 +158,17 @@ export class SpeedBumps extends React.Component<{}, SpeedBumpsState> {
                     ) : (
                         <div />
                     )}
-                    <Stack tokens={{ childrenGap: 30 }}>
+                    <Stack tokens={{ childrenGap: 5 }}>
+                        <Grid
+                            container={true}
+                            direction="column"
+                            justify="center"
+                            alignItems="center"
+                            alignContent="center"
+                        >
+                            <Text variant="xxLarge">Speed Bump Detection</Text>
+                        </Grid>
+                        <Separator />
                         <DeviceSetupDisplay
                             deviceGroup={this.state.setupSelections.deviceGroup}
                             deviceLabel={this.state.setupSelections.deviceLabel}
@@ -174,7 +196,17 @@ export class SpeedBumps extends React.Component<{}, SpeedBumpsState> {
                     ) : (
                         <div />
                     )}
-                    <Stack tokens={{ childrenGap: 30 }}>
+                    <Stack tokens={{ childrenGap: 5 }}>
+                        <Grid
+                            container={true}
+                            direction="column"
+                            justify="center"
+                            alignItems="center"
+                            alignContent="center"
+                        >
+                            <Text variant="xxLarge">Speed Bump Detection</Text>
+                        </Grid>
+                        <Separator />
                         <DeviceSetupDisplay
                             deviceGroup={this.state.setupSelections.deviceGroup}
                             deviceLabel={this.state.setupSelections.deviceLabel}

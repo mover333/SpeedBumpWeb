@@ -13,7 +13,7 @@ export const PauseButtonSwitcher: React.FunctionComponent<PauseButtonSwitcherPro
     props
 ) => {
     let show = (
-        <div style={{ margin: '20px' }}>
+        <div>
             <Grid container={true} direction="row" justify="center">
                 <PauseButton setPause={props.setPause} />
             </Grid>
@@ -21,7 +21,7 @@ export const PauseButtonSwitcher: React.FunctionComponent<PauseButtonSwitcherPro
     )
     if (props.paused) {
         show = (
-            <div style={{ margin: '20px' }}>
+            <div>
                 <Grid container={true} direction="row" justify="center">
                     <UnpauseButton setPause={props.setPause} />
                 </Grid>

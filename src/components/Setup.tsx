@@ -5,7 +5,14 @@ import { DeviceSelect } from './DeviceSelect'
 import { DeviceGroupEntry } from './DeviceGroupEntry'
 import { NotificationSelect } from './NotificationsSelect'
 import { RoleSelect } from './RoleSelect'
-import { PrimaryButton, IStackTokens, Stack, Text } from '@fluentui/react'
+import {
+    PrimaryButton,
+    IStackTokens,
+    Stack,
+    Text,
+    Separator,
+} from '@fluentui/react'
+import { Grid } from '@material-ui/core'
 
 interface SetupProps {
     setDeviceLabel: (deviceLabel: string) => void
@@ -17,11 +24,21 @@ interface SetupProps {
     setupError: boolean
 }
 
-const stackTokens: IStackTokens = { childrenGap: 20 }
+const stackTokens: IStackTokens = { childrenGap: 10 }
 
 export const Setup: React.FunctionComponent<SetupProps> = (props) => {
     return (
         <Stack tokens={stackTokens}>
+            <Grid
+                container={true}
+                direction="column"
+                justify="center"
+                alignItems="center"
+                alignContent="center"
+            >
+                <Text variant="xxLarge">Speed Bump Detection</Text>
+            </Grid>
+            <Separator />
             <DeviceSelect
                 setDeviceLabel={props.setDeviceLabel}
                 validLabels={props.validLabels}
