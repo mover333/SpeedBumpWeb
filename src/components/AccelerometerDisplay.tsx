@@ -12,6 +12,7 @@ import {
     makeStyles,
     Grid,
 } from '@material-ui/core'
+import { Text } from '@fluentui/react'
 
 interface AccelerometerDisplayProps {
     accData: AccelerometerData
@@ -31,8 +32,13 @@ export const AccelerometerDisplay: React.FunctionComponent<AccelerometerDisplayP
 
     return (
         <div>
-            <Grid container={true} direction="row" justify="center">
-                <h2 style={{ fontFamily: 'Roboto' }}>Accelerometer Data</h2>
+            <Grid
+                container={true}
+                direction="row"
+                justify="center"
+                style={{ margin: '10px' }}
+            >
+                <Text variant="large">Accelerometer Data</Text>
             </Grid>
             <TableContainer component={Paper}>
                 <Table
@@ -49,13 +55,19 @@ export const AccelerometerDisplay: React.FunctionComponent<AccelerometerDisplayP
                     <TableBody>
                         <TableRow key={1}>
                             <TableCell align="center" className={classes.cell}>
-                                {props.accData.x.toFixed(3)}
+                                {props.accData.x !== null
+                                    ? props.accData.x.toFixed(3)
+                                    : 'null'}
                             </TableCell>
                             <TableCell align="center" className={classes.cell}>
-                                {props.accData.y.toFixed(3)}
+                                {props.accData.y !== null
+                                    ? props.accData.y.toFixed(3)
+                                    : 'null'}
                             </TableCell>
                             <TableCell align="center" className={classes.cell}>
-                                {props.accData.z.toFixed(3)}
+                                {props.accData.z !== null
+                                    ? props.accData.z.toFixed(3)
+                                    : 'null'}
                             </TableCell>
                         </TableRow>
                     </TableBody>

@@ -1,11 +1,18 @@
 import * as React from 'react'
 import ReactNoSleep from 'react-no-sleep'
 
-import { Button, createMuiTheme, ThemeProvider } from '@material-ui/core'
+import { FontIcon, mergeStyles } from '@fluentui/react'
 
 interface UnpauseButtonProps {
     setPause: (state: boolean) => void
 }
+
+const iconClass = mergeStyles({
+    fontSize: 50,
+    height: 50,
+    width: 50,
+    margin: '0 25px',
+})
 
 export const UnpauseButton: React.FunctionComponent<UnpauseButtonProps> = (
     props
@@ -13,17 +20,16 @@ export const UnpauseButton: React.FunctionComponent<UnpauseButtonProps> = (
     return (
         <ReactNoSleep>
             {({ isOn, enable, disable }) => (
-                <Button
-                    variant="contained"
-                    size="small"
-                    color="secondary"
+                <FontIcon
+                    iconName="Play"
+                    className={iconClass}
                     onClick={() => {
-                        enable()
+                        disable()
                         props.setPause(false)
                     }}
                 >
                     Resume Readings
-                </Button>
+                </FontIcon>
             )}
         </ReactNoSleep>
     )

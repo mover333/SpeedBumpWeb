@@ -30,7 +30,7 @@ export class RoleSelect extends React.Component<
 
         return (
             <Dropdown
-                placeHolder="Select a mode"
+                placeholder="Select a mode"
                 label="UI Mode"
                 options={options}
                 onChange={this.handleChange}

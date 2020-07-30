@@ -8,16 +8,15 @@ import {
     ThemeProvider,
     Grid,
 } from '@material-ui/core'
+import { PrimaryButton, Text } from '@fluentui/react'
 
 interface BumpButtonProps {
     buttonPressed: () => void
-    paused: boolean
 }
 
 export const BumpButton: React.FunctionComponent<BumpButtonProps> = (props) => {
-    const classes = useStyles()
     const [count, setCount] = React.useState(0)
-    const show = (
+    return (
         <Grid
             container={true}
             direction="column"
@@ -25,32 +24,16 @@ export const BumpButton: React.FunctionComponent<BumpButtonProps> = (props) => {
             alignItems="center"
             alignContent="center"
         >
-            <a
+            <PrimaryButton
+                style={{ minWidth: '200px', minHeight: '100px' }}
                 onClick={() => {
                     setCount(count + 1)
                     props.buttonPressed()
                 }}
             >
-                <Button
-                    variant="contained"
-                    size="large"
-                    className={classes.main}
-                    color="primary"
-                >
-                    Speed Bump
-                </Button>
-            </a>
-            <p style={{ fontFamily: 'Roboto' }}>Press Count: {count}</p>
+                Speed Bump
+            </PrimaryButton>
+            <Text style={{ margin: '20px' }}>Press Count: {count}</Text>
         </Grid>
     )
-
-    return show
 }
-
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        main: {
-            padding: theme.spacing(6),
-        },
-    })
-)

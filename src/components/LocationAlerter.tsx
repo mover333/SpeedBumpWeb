@@ -11,7 +11,6 @@ interface LocationAlerterProps {
 
 interface LocationAlerterState {
     notificationPermission: NotificationPermission
-    enableAlerts: boolean
 }
 
 interface LocationLatLon
@@ -27,32 +26,13 @@ export class LocationAlerter extends React.Component<
         super(props)
         this.state = {
             notificationPermission: null,
-            enableAlerts: false,
         }
         this.hashes = []
-        this.valids = [{ latitude: 47.62121, longitude: -122.17748 }]
+        this.valids = [{ latitude: 47.62109, longitude: -122.17696 }]
     }
 
     public render() {
-        return (
-            <FormControl
-                style={{
-                    margin: '10px',
-                    minWidth: '120px',
-                }}
-            >
-                <InputLabel id="alert-select">Enable Alerts</InputLabel>
-                <Select
-                    labelId="alert-select"
-                    id="alert-select-id"
-                    value={this.state.enableAlerts.toString()}
-                    onChange={this.handleChange}
-                >
-                    <MenuItem value={'true'}>Enabled</MenuItem>
-                    <MenuItem value={'false'}>Disabled</MenuItem>
-                </Select>
-            </FormControl>
-        )
+        return <div />
     }
 
     public async componentDidMount() {
@@ -79,10 +59,7 @@ export class LocationAlerter extends React.Component<
         prevProps: LocationAlerterProps,
         prevState: LocationAlerterState
     ) {
-        if (
-            !_.isEqual(prevProps.location, this.props.location) &&
-            this.state.enableAlerts
-        ) {
+        if (!_.isEqual(prevProps.location, this.props.location)) {
             // location has changed
             const rounded = this.roundLatLon(this.props.location)
             if (!this.inHash(rounded, this.hashes)) {
@@ -101,12 +78,6 @@ export class LocationAlerter extends React.Component<
                 }
             }
         }
-    }
-
-    private handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-        const enabledString = event.target.value as string
-        const enabled = enabledString === 'true'
-        this.setState({ enableAlerts: enabled })
     }
 
     private roundLatLon = (loc: LocationData): LocationLatLon => {

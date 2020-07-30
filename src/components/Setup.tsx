@@ -1,31 +1,27 @@
 import * as React from 'react'
 import { isIOS } from 'react-device-detect'
 
-import { Grid } from '@material-ui/core'
 import { DeviceSelect } from './DeviceSelect'
 import { DeviceGroupEntry } from './DeviceGroupEntry'
 import { NotificationSelect } from './NotificationsSelect'
 import { RoleSelect } from './RoleSelect'
-import { Button } from '@fluentui/react'
+import { PrimaryButton, IStackTokens, Stack, Text } from '@fluentui/react'
 
 interface SetupProps {
     setDeviceLabel: (deviceLabel: string) => void
     setDeviceGroup: (deviceGroup: string) => void
     setNotifications: (enabled: boolean) => void
     setRole: (role: string) => void
-    setSetup: (setup: boolean) => void
+    handleSubmit: () => void
     validLabels: string[]
+    setupError: boolean
 }
+
+const stackTokens: IStackTokens = { childrenGap: 20 }
 
 export const Setup: React.FunctionComponent<SetupProps> = (props) => {
     return (
-        <Grid
-            container={true}
-            direction="column"
-            justify="center"
-            alignItems="center"
-            alignContent="center"
-        >
+        <Stack tokens={stackTokens}>
             <DeviceSelect
                 setDeviceLabel={props.setDeviceLabel}
                 validLabels={props.validLabels}
@@ -38,13 +34,20 @@ export const Setup: React.FunctionComponent<SetupProps> = (props) => {
             )}
 
             <RoleSelect setRole={props.setRole} />
-            <Button
+            <PrimaryButton
                 onClick={() => {
-                    props.setSetup(false)
+                    props.handleSubmit()
                 }}
             >
                 Submit
-            </Button>
-        </Grid>
+            </PrimaryButton>
+            {props.setupError ? (
+                <Text style={{ color: 'red' }}>
+                    Some fields are missing, please try again
+                </Text>
+            ) : (
+                <div />
+            )}
+        </Stack>
     )
 }

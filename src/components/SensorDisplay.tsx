@@ -18,7 +18,6 @@ import { LocationDisplay } from './LocationDisplay'
 interface SensorDisplayProps {
     accData: AccelerometerData
     locationData: LocationData
-    paused: boolean
 }
 
 const useStyles = makeStyles({
@@ -33,19 +32,10 @@ export const SensorDisplay: React.FunctionComponent<SensorDisplayProps> = (
 ) => {
     const classes = useStyles()
 
-    let show = (
-        <Grid container={true} direction="row" justify="center">
-            <h2 style={{ fontFamily: 'Roboto' }}>Paused</h2>
-        </Grid>
+    return (
+        <div>
+            <AccelerometerDisplay accData={props.accData} />
+            <LocationDisplay locData={props.locationData} />
+        </div>
     )
-    if (!props.paused) {
-        show = (
-            <div>
-                <AccelerometerDisplay accData={props.accData} />
-                <LocationDisplay locData={props.locationData} />
-            </div>
-        )
-    }
-
-    return show
 }

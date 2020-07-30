@@ -29,7 +29,7 @@ export class NotificationSelect extends React.Component<
 
         return (
             <Dropdown
-                placeHolder="Select a mode"
+                placeholder="Select a mode"
                 label="Speed Bump Notification Alerts"
                 options={options}
                 onChange={this.handleChange}

@@ -3,6 +3,7 @@ import { isIOS } from 'react-device-detect'
 
 import { AccelerometerData } from '../models/Sensors'
 import { Button } from '@material-ui/core'
+import { PrimaryButton } from '@fluentui/react'
 
 interface AccelerometerReaderProps {
     updateAcc: (acc: AccelerometerData) => void
@@ -29,15 +30,9 @@ export class AccelerometerReader extends React.Component<
         let show = <div />
         if (this.state.isIos && !this.state.iosIsEnabled) {
             show = (
-                <Button
-                    variant="contained"
-                    size="small"
-                    color="secondary"
-                    style={{ margin: '5px' }}
-                    onClick={this.handleButton}
-                >
+                <PrimaryButton onClick={this.handleButton}>
                     iOS 13+ Enable Accelerometer
-                </Button>
+                </PrimaryButton>
             )
         }
         return show

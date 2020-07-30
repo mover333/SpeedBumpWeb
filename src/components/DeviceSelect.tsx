@@ -31,7 +31,7 @@ export class DeviceSelect extends React.Component<
 
         return (
             <Dropdown
-                placeHolder="Select a device"
+                placeholder="Select a device"
                 label="Device Label"
                 options={options}
                 onChange={this.handleChange}

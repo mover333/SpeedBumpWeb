@@ -3,9 +3,18 @@ import { v4 as guid } from 'uuid'
 
 import { SensorsData, AccelerometerData, LocationData } from '../models/Sensors'
 import { Sensors } from './Sensors'
-import { Feedback } from './Feedback'
 import { AccelHubMessage, ButtonHubMessage } from '../models/HubData'
 import { Setup } from './Setup'
+import { DeviceSetupDisplay } from './DeviceSetupDisplay'
+import { Stack, Separator } from '@fluentui/react'
+import { PauseButtonSwitcher } from './PauseButtonSwitcher'
+import { StatusBar } from './StatusBar'
+import { SensorDisplay } from './SensorDisplay'
+import { LocationReader } from './LocationReader'
+import { LocationDisplay } from './LocationDisplay'
+import { BumpButton } from './BumpButton'
+import { LocationAlerter } from './LocationAlerter'
+import { isIOS } from 'react-device-detect'
 
 interface SpeedBumpsState {
     sensors: SensorsData
@@ -19,6 +28,7 @@ interface SpeedBumpsState {
     validLabels: string[]
     transmitting: boolean
     setup: boolean
+    setupError: boolean
 }
 
 export class SpeedBumps extends React.Component<{}, SpeedBumpsState> {
@@ -36,6 +46,7 @@ export class SpeedBumps extends React.Component<{}, SpeedBumpsState> {
             validLabels: [''],
             transmitting: false,
             setup: true,
+            setupError: false,
         }
     }
 
@@ -49,10 +60,11 @@ export class SpeedBumps extends React.Component<{}, SpeedBumpsState> {
                         setNotifications={this.setNotifications}
                         setRole={this.setRole}
                         validLabels={this.state.validLabels}
-                        setSetup={this.setSetup}
+                        handleSubmit={this.handleSubmit}
+                        setupError={this.state.setupError}
                     />
                 ) : (
-                    <div />
+                    this.getRoleView()
                 )}
             </div>
         )
@@ -84,6 +96,111 @@ export class SpeedBumps extends React.Component<{}, SpeedBumpsState> {
 
         const labels = await response.json()
         this.setState({ validLabels: labels })
+    }
+
+    private getRoleView = () => {
+        if (this.state.setupSelections.role === 'accel') {
+            return (
+                <div>
+                    <Sensors
+                        updateAcc={this.updateAcc}
+                        updateLocation={this.updateLocation}
+                    />
+                    {this.state.setupSelections.notificationsEnabled ? (
+                        <LocationAlerter
+                            location={this.getLocData(this.state.sensors)}
+                        />
+                    ) : (
+                        <div />
+                    )}
+                    <Stack tokens={{ childrenGap: 30 }}>
+                        <DeviceSetupDisplay
+                            deviceGroup={this.state.setupSelections.deviceGroup}
+                            deviceLabel={this.state.setupSelections.deviceLabel}
+                        />
+                        <PauseButtonSwitcher
+                            setPause={this.setPause}
+                            paused={this.state.paused}
+                        />
+                        <Separator />
+                        <StatusBar
+                            paused={this.state.paused}
+                            transmitting={this.state.transmitting}
+                        />
+                        <Separator />
+                        <SensorDisplay
+                            accData={this.getAccData(this.state.sensors)}
+                            locationData={this.getLocData(this.state.sensors)}
+                        />
+                    </Stack>
+                </div>
+            )
+        } else if (this.state.setupSelections.role === 'bump') {
+            return (
+                <div>
+                    <LocationReader updateLocation={this.updateLocation} />
+                    {this.state.setupSelections.notificationsEnabled ? (
+                        <LocationAlerter
+                            location={this.getLocData(this.state.sensors)}
+                        />
+                    ) : (
+                        <div />
+                    )}
+                    <Stack tokens={{ childrenGap: 30 }}>
+                        <DeviceSetupDisplay
+                            deviceGroup={this.state.setupSelections.deviceGroup}
+                            deviceLabel={this.state.setupSelections.deviceLabel}
+                        />
+                        <Separator />
+                        <BumpButton buttonPressed={this.buttonPressed} />
+                        <Separator />
+                        <LocationDisplay
+                            locData={this.getLocData(this.state.sensors)}
+                        />
+                    </Stack>
+                </div>
+            )
+        } else if (this.state.setupSelections.role === 'both') {
+            return (
+                <div>
+                    <Sensors
+                        updateAcc={this.updateAcc}
+                        updateLocation={this.updateLocation}
+                    />
+                    {this.state.setupSelections.notificationsEnabled ? (
+                        <LocationAlerter
+                            location={this.getLocData(this.state.sensors)}
+                        />
+                    ) : (
+                        <div />
+                    )}
+                    <Stack tokens={{ childrenGap: 30 }}>
+                        <DeviceSetupDisplay
+                            deviceGroup={this.state.setupSelections.deviceGroup}
+                            deviceLabel={this.state.setupSelections.deviceLabel}
+                        />
+                        <PauseButtonSwitcher
+                            setPause={this.setPause}
+                            paused={this.state.paused}
+                        />
+                        <Separator />
+                        <StatusBar
+                            paused={this.state.paused}
+                            transmitting={this.state.transmitting}
+                        />
+                        <Separator />
+                        <BumpButton buttonPressed={this.buttonPressed} />
+                        <Separator />
+                        <SensorDisplay
+                            accData={this.getAccData(this.state.sensors)}
+                            locationData={this.getLocData(this.state.sensors)}
+                        />
+                    </Stack>
+                </div>
+            )
+        } else {
+            return <div />
+        }
     }
 
     private updateAcc = (accData: AccelerometerData) => {
@@ -154,6 +271,18 @@ export class SpeedBumps extends React.Component<{}, SpeedBumpsState> {
         }
     }
 
+    private getAccData = (sensorData: SensorsData): AccelerometerData => {
+        if (sensorData?.accelerometer) {
+            return sensorData.accelerometer
+        } else {
+            return {
+                x: null,
+                y: null,
+                z: null,
+            }
+        }
+    }
+
     private buttonPressed = async () => {
         const buttonData: ButtonHubMessage = {
             locationData: this.getLocData(this.state.sensors),
@@ -182,8 +311,8 @@ export class SpeedBumps extends React.Component<{}, SpeedBumpsState> {
     private setDeviceLabel = (label: string) => {
         this.setState({
             setupSelections: {
-                deviceLabel: label,
                 ...this.state.setupSelections,
+                deviceLabel: label,
             },
         })
     }
@@ -191,8 +320,8 @@ export class SpeedBumps extends React.Component<{}, SpeedBumpsState> {
     private setDeviceGroup = (group: string) => {
         this.setState({
             setupSelections: {
-                deviceGroup: group,
                 ...this.state.setupSelections,
+                deviceGroup: group,
             },
         })
     }
@@ -200,8 +329,8 @@ export class SpeedBumps extends React.Component<{}, SpeedBumpsState> {
     private setNotifications = (enabled: boolean) => {
         this.setState({
             setupSelections: {
-                notificationsEnabled: enabled,
                 ...this.state.setupSelections,
+                notificationsEnabled: enabled,
             },
         })
     }
@@ -209,13 +338,24 @@ export class SpeedBumps extends React.Component<{}, SpeedBumpsState> {
     private setRole = (role: string) => {
         this.setState({
             setupSelections: {
-                role,
                 ...this.state.setupSelections,
+                role,
             },
         })
     }
 
-    private setSetup = (setup: boolean) => {
-        this.setState({ setup })
+    private handleSubmit = () => {
+        const needNot = !isIOS
+        if (
+            this.state.setupSelections.deviceGroup === null ||
+            this.state.setupSelections.deviceLabel === null ||
+            (this.state.setupSelections.notificationsEnabled === null &&
+                needNot) ||
+            this.state.setupSelections.role === null
+        ) {
+            this.setState({ setupError: true })
+        } else {
+            this.setState({ setup: false })
+        }
     }
 }

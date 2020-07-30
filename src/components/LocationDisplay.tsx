@@ -12,7 +12,7 @@ import {
     makeStyles,
     Grid,
 } from '@material-ui/core'
-
+import { Text } from '@fluentui/react'
 interface LocationDisplayProps {
     locData: LocationData
 }
@@ -31,8 +31,13 @@ export const LocationDisplay: React.FunctionComponent<LocationDisplayProps> = (
 
     return (
         <div>
-            <Grid container={true} direction="row" justify="center">
-                <h2 style={{ fontFamily: 'Roboto' }}>Location Data</h2>
+            <Grid
+                container={true}
+                direction="row"
+                justify="center"
+                style={{ margin: '10px' }}
+            >
+                <Text variant="large">Location Data</Text>
             </Grid>
             <TableContainer component={Paper}>
                 <Table
@@ -51,25 +56,29 @@ export const LocationDisplay: React.FunctionComponent<LocationDisplayProps> = (
                     <TableBody>
                         <TableRow key={1}>
                             <TableCell align="center" className={classes.cell}>
-                                {props.locData.latitude.toFixed(5)}
+                                {props.locData.latitude
+                                    ? props.locData.latitude.toFixed(5)
+                                    : 'null'}
                             </TableCell>
                             <TableCell align="center" className={classes.cell}>
-                                {props.locData.longitude.toFixed(5)}
+                                {props.locData.longitude
+                                    ? props.locData.longitude.toFixed(5)
+                                    : 'null'}
                             </TableCell>
                             <TableCell align="center" className={classes.cell}>
                                 {props.locData?.heading
                                     ? props.locData.heading.toFixed(3)
-                                    : null}
+                                    : 'null'}
                             </TableCell>
                             <TableCell align="center" className={classes.cell}>
                                 {props.locData?.speed
                                     ? props.locData.speed.toFixed(3)
-                                    : null}
+                                    : 'null'}
                             </TableCell>
                             <TableCell align="center" className={classes.cell}>
                                 {props.locData?.altitude
                                     ? props.locData.altitude.toFixed(3)
-                                    : null}
+                                    : 'null'}
                             </TableCell>
                         </TableRow>
                     </TableBody>
