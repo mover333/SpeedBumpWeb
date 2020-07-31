@@ -1,6 +1,6 @@
 api-version: 2019-12-01
 location: westus
-name: app-with-ssl6
+name: app-with-ssl
 properties:
     containers:
         - name: nginx-with-ssl
@@ -18,7 +18,7 @@ properties:
                     mountPath: /etc/nginx
         - name: webapp
           properties:
-              image: hackmioverfi.azurecr.io/acc-test:3
+              image: myaccount.azurecr.io/acc-test:3
               ports:
                   - port: 3000
                     protocol: TCP
@@ -27,22 +27,22 @@ properties:
                       cpu: 1.0
                       memoryInGB: 1.5
     imageRegistryCredentials: # Credentials to pull a private image
-        - server: hackmioverfi.azurecr.io
-          username: hackmioverfi
+        - server: myaccount.azurecr.io
+          username: myaccount
           password: <ACR Password>
     volumes:
         - name: nginx-config
           azureFile:
               shareName: containerfiles
-              storageAccountName: mioverfihack
+              storageAccountName: myaccount
               storageAccountKey: <Storage Account Key>
     ipAddress:
         ports:
             - port: 443
               protocol: TCP
         type: Public
-    networkProfile:
-        id: /subscriptions/<Subscription ID>/resourceGroups/myResourceGroup/providers/Microsoft.Network/networkProfiles/aci-network-profile-aci-vnet-subnet
+    # networkProfile:
+    #     id: /subscriptions/<Subscription ID>/resourceGroups/myResourceGroup/providers/Microsoft.Network/networkProfiles/aci-network-profile-aci-vnet-subnet
     osType: Linux
 tags: null
 type: Microsoft.ContainerInstance/containerGroups
