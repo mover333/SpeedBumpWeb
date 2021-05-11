@@ -29,7 +29,7 @@
         "dotenv": "^8.2.0",
         "express": "^4.17.1",
         "fontsource-roboto": "^2.2.6",
-        "lodash": "^4.17.19",
+        "lodash": "^4.17.21",
         "object-hash": "^2.0.3",
         "react-device-detect": "^1.13.1",
         "react-no-sleep": "^1.0.2",
